@@ -1,0 +1,251 @@
+<script>
+const FORM_URL = "https://docs.google.com/document/d/1gP786fjg4YpQlaLnf-dQzIuV9LP-P4G3/edit";
+const EMAIL = "tc.yew@moh.gov.my";
+
+  <!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QII Project Screening Process</title>
+
+  <!-- FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #7c3aed;      /* Canva purple */
+      --secondary: #a78bfa;
+      --accent: #22c55e;
+      --bg: #f5f3ff;
+      --dark: #1f2937;
+    }
+
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg), #ede9fe);
+      margin: 0;
+      padding: 30px;
+      color: var(--dark);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      max-width: 900px;
+      margin: 0 auto 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button.secondary {
+      background: var(--secondary);
+    }
+
+    .progress-container {
+      max-width: 900px;
+      margin: 20px auto 30px;
+      background: #e5e7eb;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.4s ease;
+    }
+
+    .timeline {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .step {
+      background: white;
+      border-radius: 18px;
+      padding: 22px 26px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 8px solid var(--primary);
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .step:hover {
+      transform: translateY(-4px);
+    }
+
+    .step.active {
+      background: #f0fdf4;
+      border-left-color: var(--accent);
+    }
+
+    .icon {
+      font-size: 26px;
+      color: var(--primary);
+      margin-top: 4px;
+      min-width: 30px;
+    }
+
+    .step-number {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 4px 0 6px;
+    }
+
+    .step-desc {
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .footer {
+      max-width: 900px;
+      margin: 40px auto 0;
+      background: #1e1b4b;
+      color: white;
+      border-radius: 18px;
+      padding: 18px 26px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    @media print {
+      button, .controls {
+        display: none;
+      }
+      body {
+        background: white;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<h1 id="title">Proses Saringan & Penilaian Projek QII</h1>
+
+<div class="controls">
+  <div>
+    <button onclick="setLang('ms')">Bahasa 🇲🇾</button>
+    <button class="secondary" onclick="setLang('en')">English 🇬🇧</button>
+  </div>
+  <button onclick="downloadPDF()">
+    <i class="fa-solid fa-file-pdf"></i> Download PDF
+  </button>
+</div>
+
+<div class="progress-container">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="timeline" id="timeline"></div>
+
+<div class="footer" id="footer">
+  ⏱️ Tempoh proses: 14 hari kalendar dari tarikh penerimaan borang lengkap
+</div>
+
+<script>
+const data = {
+  ms: {
+    title: "Proses Saringan & Penilaian Projek QII",
+    footer: "⏱️ Tempoh proses: 14 hari kalendar dari tarikh penerimaan borang lengkap",
+    steps: [
+      { icon: "fa-pen-to-square", title: "Permulaan", desc: "Pengisian Borang Saringan Projek QII oleh Ketua Projek." },
+      { icon: "fa-envelope", title: "Penghantaran", desc: "Borang lengkap dihantar melalui emel kepada tc.yew@moh.gov.my (Setiausaha JK QII Farmasi Sarawak)." },
+      { icon: "fa-users-gear", title: "Proses Penilaian", desc: "Proses saringan dan penilaian oleh dua (2) orang penilai yang dilantik." },
+      { icon: "fa-clipboard-check", title: "Kriteria Penilaian", desc: "Cadangan penambahbaikan projek dan keperluan bimbingan (coaching)." },
+      { icon: "fa-envelope-open-text", title: "Keputusan", desc: "Makluman keputusan dihantar secara rasmi melalui emel kepada Ketua Projek." }
+    ]
+  },
+  en: {
+    title: "QII Project Screening & Evaluation Process",
+    footer: "⏱️ Processing timeline: 14 calendar days from receipt of completed form",
+    steps: [
+      { icon: "fa-pen-to-square", title: "Initiation", desc: "Completion of QII Project Screening Form by Project Leader." },
+      { icon: "fa-envelope", title: "Submission", desc: "Completed form emailed to tc.yew@moh.gov.my (Secretary, Sarawak Pharmacy QII Committee)." },
+      { icon: "fa-users-gear", title: "Evaluation Process", desc: "Screening and evaluation by two (2) appointed evaluators." },
+      { icon: "fa-clipboard-check", title: "Evaluation Criteria", desc: "Project improvement recommendations and coaching needs." },
+      { icon: "fa-envelope-open-text", title: "Decision", desc: "Official decision communicated via email to Project Leader." }
+    ]
+  }
+};
+
+let currentLang = "ms";
+
+function render() {
+  document.getElementById("title").innerText = data[currentLang].title;
+  document.getElementById("footer").innerText = data[currentLang].footer;
+
+  const timeline = document.getElementById("timeline");
+  timeline.innerHTML = "";
+
+  data[currentLang].steps.forEach((s, i) => {
+    const div = document.createElement("div");
+    div.className = "step";
+    div.innerHTML = `
+      <div class="icon"><i class="fa-solid ${s.icon}"></i></div>
+      <div>
+        <div class="step-number">Langkah ${i + 1}</div>
+        <div class="step-title">${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+      </div>
+    `;
+    div.onclick = () => activateStep(i);
+    timeline.appendChild(div);
+  });
+}
+
+function activateStep(index) {
+  const steps = document.querySelectorAll(".step");
+  steps.forEach((s, i) => {
+    s.classList.toggle("active", i === index);
+  });
+  const progress = ((index + 1) / steps.length) * 100;
+  document.getElementById("progressBar").style.width = progress + "%";
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  render();
+  document.getElementById("progressBar").style.width = "0%";
+}
+
+function downloadPDF() {
+  window.print();
+}
+
+render();
+</script>
+
+</body>
+</html>
